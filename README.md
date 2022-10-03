@@ -9,3 +9,9 @@ A shell script is created which updates the system first
   if it is not installed then it installs and runs the server
   
 Details of Task-3 :
+
+Inventory file added where log file will be stored in below format
+
+Log Type         Time Created         Type        Size
+
+Cron job added to run the task every minute
