@@ -35,3 +35,39 @@ tar -cvf /tmp/$myname-httpd-logs-$timestamp.tar /var/log/apache2/*.log
 
 #6- Running the awscli command and copy the archive to the s3 bucket.
 aws s3 cp /tmp/$myname-httpd-logs-$timestamp.tar s3://${s3bucket}/${myname}-httpd-logs-${timestamp}.tar
+
+#Task-3
+
+if [ -f "/var/www/html/inventory.html" ];
+then
+
+        printf "<p>" >> /var/www/html/inventory.html
+        printf "\n\t$(ls -t /tmp | grep httpd | head -1 | cut -d '-' -f 2,3)" >> /var/www/html/inventory.html
+        printf "\t\t$(ls -t /tmp | grep httpd | head -1 | cut -d '-' -f 4,5 | cut -d '.' -f 1)" >> /var/www/html/inventory.html
+        printf "\t\t\t $(ls -t /tmp | grep httpd | head -1 | cut -d '.' -f 2)" >> /var/www/html/inventory.html
+        printf "\t\t\t\t$(ls -sht /tmp | grep httpd | head -1 | awk {'print $1'})" >> /var/www/html/inventory.html
+        printf "</p>" >> /var/www/html/inventory.html
+
+else
+        touch /var/www/html/inventory.html
+        printf "<p>" >> /var/www/html/inventory.html
+        printf "\tLog_Type\tDate_Created\tType\tSize" >> /var/www/html/inventory.html
+        printf "</p>" >> /var/www/html/inventory.html
+        printf "<p>" >> /var/www/html/inventory.htm
+        printf "\n\t$(ls -t /tmp | grep httpd | head -1 | cut -d '-' -f 2,3)" >> /var/www/html/inventory.html
+        printf "\t\t$(ls -t /tmp | grep httpd | head -1 | cut -d '-' -f 4,5 | cut -d '.' -f 1)" >> /var/www/html/inventory.html
+        printf "\t\t\t $(ls -t /tmp | grep httpd | head -1 | cut -d '.' -f 2)" >> /var/www/html/inventory.html
+        printf "\t\t\t\t$(ls -sht /tmp | grep httpd | head -1 | awk {'print $1'})" >> /var/www/html/inventory.html
+        printf "</p>" >> /var/www/html/inventory.html
+
+fi
+
+# Cron Job to run every minute
+
+if [ -f "/etc/cron.d/automation" ];
+then
+	echo "Cron job file is present"
+else
+	sudo touch /etc/cron.d/automation
+	sudo echo "* * * * * root /root/Automation_Project/auotmation.sh" > /etc/cron.d/automation
+fi
